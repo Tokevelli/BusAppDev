@@ -1,3 +1,4 @@
+#lists the menu options
 def show_menu():
     print("\n=== Sentinel Security Services ===")
     print("1. View All Incidents")
@@ -8,7 +9,7 @@ def show_menu():
     print("6. Display Charts")
     print("7. Save and Exit")
 
-
+#while loop that keeps the menu running while user makes selections until 7 is selected
 def main():
     while True:
         show_menu()
