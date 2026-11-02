@@ -20,7 +20,7 @@ def main():
             break
 
         elif choice == "1":
-            print("Coming soon")
+            view_incidents()
 
         elif choice == "2":
             print("Coming soon")
@@ -39,6 +39,43 @@ def main():
 
         else:
             print("Invalid option. Please choose 1-7.")
+
+
+# Sample security incidents
+incidents = {
+    101: {
+        "client": "Bitterroot Family Dental",
+        "type": "Phishing",
+        "severity": "Medium",
+        "status": "Open"
+    },
+    102: {
+        "client": "Clark Fork Accounting",
+        "type": "Malware",
+        "severity": "High",
+        "status": "Closed"
+    },
+    103: {
+        "client": "Missoula Outdoor Supply",
+        "type": "Suspicious Login",
+        "severity": "Low",
+        "status": "Open"
+    }
+}
+
+
+# Displays all recorded security incidents.
+def view_incidents():
+    print("\n=== Recorded Security Incidents ===")
+
+    for incident_id in incidents:
+        incident = incidents[incident_id]
+
+        print("\nIncident ID:", incident_id)
+        print("Client:", incident["client"])
+        print("Type:", incident["type"])
+        print("Severity:", incident["severity"])
+        print("Status:", incident["status"])
 
 
 main()
