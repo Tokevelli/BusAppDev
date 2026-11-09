@@ -23,7 +23,7 @@ def main():
             view_incidents()
 
         elif choice == "2":
-            print("Coming soon")
+            report_incident()
 
         elif choice == "3":
             print("Coming soon")
@@ -76,6 +76,73 @@ def view_incidents():
         print("Type:", incident["type"])
         print("Severity:", incident["severity"])
         print("Status:", incident["status"])
+
+
+# Incident types and their assigned severity
+incident_types = {
+    "1": {"type": "Suspicious Login", "severity": "Low"},
+    "2": {"type": "Phishing", "severity": "Medium"},
+    "3": {"type": "Malware", "severity": "High"},
+    "4": {"type": "Account Compromise", "severity": "High"},
+    "5": {"type": "Unauthorized Access", "severity": "Critical"}
+}
+
+
+# Adds a new security incident or updates an existing one.
+def report_incident():
+    print("\n=== Report or Update Incident ===")
+
+    incident_id = input("Enter incident ID: ")
+
+    # Check that the ID contains only numbers
+    if not incident_id.isdigit():
+        print("Invalid ID. Please enter a number.")
+        return
+
+    incident_id = int(incident_id)
+
+    # Update an existing incident
+    if incident_id in incidents:
+        print("Incident already exists.")
+        print("Current status:", incidents[incident_id]["status"])
+
+        new_status = input("Enter new status (Open/Closed): ")
+
+        if new_status == "Open" or new_status == "Closed":
+            incidents[incident_id]["status"] = new_status
+            print("Incident updated successfully.")
+        else:
+            print("Invalid status. No changes made.")
+
+    # Create a new incident
+    else:
+        client = input("Enter client name: ").strip()
+
+        if client == "":
+            print("Client name cannot be empty.")
+            return
+
+        print("\nIncident Types:")
+        for key in incident_types:
+            print(key + ".", incident_types[key]["type"])
+
+        type_choice = input("Select incident type (1-5): ")
+
+        if type_choice not in incident_types:
+            print("Invalid incident type.")
+            return
+
+        incident_type = incident_types[type_choice]["type"]
+        severity = incident_types[type_choice]["severity"]
+
+        incidents[incident_id] = {
+            "client": client,
+            "type": incident_type,
+            "severity": severity,
+            "status": "Open"
+        }
+
+        print("New incident added successfully.")
 
 
 main()
