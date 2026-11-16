@@ -2,4 +2,4 @@ id,client,type,severity,status
 101,Bitterroot Family Dental,Phishing,Medium,Open
 102,Clark Fork Accounting,Malware,High,Closed
 103,Missoula Outdoor Supply,Suspicious Login,Low,Open
-222,Test,Phishing,Medium,Open
+222,Test,Phishing,Medium,Closed

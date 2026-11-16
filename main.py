@@ -1,4 +1,4 @@
-
+from datetime import date
 import csv
 
 
@@ -17,6 +17,7 @@ def show_menu():
 #while loop that keeps the menu running while user makes selections until 7 is selected
 def main():
     load_incidents()
+    load_activities()
 
     while True:
         show_menu()
@@ -24,6 +25,7 @@ def main():
 
         if choice == "7":
             save_incidents()
+            save_activities()
             print("Incidents saved successfully.")
             print("Exiting Sentinel Security Services.")
             break
@@ -35,7 +37,7 @@ def main():
             report_incident()
 
         elif choice == "3":
-            print("Coming soon")
+            close_incident()
 
         elif choice == "4":
             print("Coming soon")
@@ -53,6 +55,8 @@ def main():
 # Stores incident records loaded from the CSV file
 incidents = {}
 
+# Stores incident activity transacgtions
+activities = []
 
 # Loads incident records from incidents.csv.
 def load_incidents():
@@ -88,6 +92,37 @@ def save_incidents():
                 "severity": incident["severity"],
                 "status": incident["status"]
             })
+
+
+
+# Loads previously recorded activities from activities.csv.
+def load_activities():
+    try:
+        with open("activities.csv", "r", newline="") as file:
+            reader = csv.DictReader(file)
+
+            for row in reader:
+                activities.append({
+                    "date": row["date"],
+                    "incident_id": int(row["incident_id"]),
+                    "client": row["client"],
+                    "action": row["action"]
+                })
+
+    except FileNotFoundError:
+        print("No previous activity records found.")
+
+
+# Saves activity transactions to activities.csv.
+def save_activities():
+    with open("activities.csv", "w", newline="") as file:
+        fieldnames = ["date", "incident_id", "client", "action"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        writer.writeheader()
+
+        for activity in activities:
+            writer.writerow(activity)
 
 
 # Displays all recorded security incidents.
@@ -169,6 +204,38 @@ def report_incident():
         }
 
         print("New incident added successfully.")
+
+
+# Closes an open incident and records the action as a transaction.
+def close_incident():
+    print("\n=== Close an Incident ===")
+
+    incident_id = input("Enter incident ID to close: ")
+
+    if not incident_id.isdigit():
+        print("Invalid ID. Please enter a number.")
+        return
+
+    incident_id = int(incident_id)
+
+    if incident_id not in incidents:
+        print("Incident not found.")
+        return
+
+    if incidents[incident_id]["status"] == "Closed":
+        print("This incident is already closed.")
+        return
+
+    incidents[incident_id]["status"] = "Closed"
+
+    activities.append({
+        "date": str(date.today()),
+        "incident_id": incident_id,
+        "client": incidents[incident_id]["client"],
+        "action": "Closed"
+    })
+
+    print("Incident closed and activity recorded.")
 
 
 main()
