@@ -1,3 +1,7 @@
+
+import csv
+
+
 #lists the menu options
 def show_menu():
     print("\n=== Sentinel Security Services ===")
@@ -9,13 +13,18 @@ def show_menu():
     print("6. Display Charts")
     print("7. Save and Exit")
 
+
 #while loop that keeps the menu running while user makes selections until 7 is selected
 def main():
+    load_incidents()
+
     while True:
         show_menu()
         choice = input("Select an option: ")
 
         if choice == "7":
+            save_incidents()
+            print("Incidents saved successfully.")
             print("Exiting Sentinel Security Services.")
             break
 
@@ -41,27 +50,44 @@ def main():
             print("Invalid option. Please choose 1-7.")
 
 
-# Sample security incidents
-incidents = {
-    101: {
-        "client": "Bitterroot Family Dental",
-        "type": "Phishing",
-        "severity": "Medium",
-        "status": "Open"
-    },
-    102: {
-        "client": "Clark Fork Accounting",
-        "type": "Malware",
-        "severity": "High",
-        "status": "Closed"
-    },
-    103: {
-        "client": "Missoula Outdoor Supply",
-        "type": "Suspicious Login",
-        "severity": "Low",
-        "status": "Open"
-    }
-}
+# Stores incident records loaded from the CSV file
+incidents = {}
+
+
+# Loads incident records from incidents.csv.
+def load_incidents():
+    with open("incidents.csv", "r", newline="") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            incident_id = int(row["id"])
+
+            incidents[incident_id] = {
+                "client": row["client"],
+                "type": row["type"],
+                "severity": row["severity"],
+                "status": row["status"]
+            }
+
+
+# Saves incident records to incidents.csv.
+def save_incidents():
+    with open("incidents.csv", "w", newline="") as file:
+        fieldnames = ["id", "client", "type", "severity", "status"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        writer.writeheader()
+
+        for incident_id in incidents:
+            incident = incidents[incident_id]
+
+            writer.writerow({
+                "id": incident_id,
+                "client": incident["client"],
+                "type": incident["type"],
+                "severity": incident["severity"],
+                "status": incident["status"]
+            })
 
 
 # Displays all recorded security incidents.
